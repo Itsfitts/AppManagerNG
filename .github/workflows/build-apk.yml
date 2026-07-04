@@ -10,7 +10,7 @@ on:
         type: choice
         options:
           - main
-          - develop
+          - upstream
       build_type:
         description: 'Build type'
         required: true
