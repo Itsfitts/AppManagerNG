@@ -5,7 +5,13 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## Unreleased
 
+## v0.6.5 — 2026-07-09
+
 ### Added
+- Added a dedicated dark-theme preview for the clear-cache home-screen widget.
+- Auto-freeze on screen lock is now a configurable Rules setting backed by a
+  cancellable, process-death-safe WorkManager job; waking or unlocking cancels
+  pending work, and delay values are bounded to ten minutes.
 - Re-enabled the five Robolectric fixture test classes ignored since
   2026-05-25 (ZipFileSystem, ZipDocumentFile, TarUtils, OABConverter,
   SettingsSearchIndex — 79 tests restored) and implemented
@@ -14,6 +20,51 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   under the Android Studio JBR; Eclipse Adoptium JDK 21 runs it green.
 
 ### Fixed
+- Replaced parenthesized English plural shortcuts with quantity-aware copy at
+  package visibility, cleanup, backup, keystore, privilege-health, credential,
+  and permission-monitor call sites; settings and exit labels now use sentence
+  case consistently.
+- Home-screen widgets now refresh their baked colors in the background as soon
+  as the running app observes a system light/dark mode change.
+- System Config now merges PackageManager's runtime feature inventory after all
+  partition XML, preserves the highest feature version, applies unavailable
+  overrides last, and distinguishes failed hidden-probe discovery as unknown.
+- Local Robolectric tests now run against Android SDK 36 and fail with an
+  actionable preflight when Gradle is not using the documented JDK 21 runtime.
+- The vendored archive codec now lives in the app namespace so Android 16's
+  platform Commons Compress classes cannot shadow its extended APIs at runtime.
+- Searchable multi-choice dialogs now populate their initial rows synchronously,
+  and OpenPGP key selection uses a lifecycle-owned executor instead of raw UI
+  helper threads.
+- ZipFileSystem tests now assert real hidden, timestamp, and POSIX-mode
+  behavior and always unmount tracked virtual filesystems after failures.
+- Changing the privileged local-server port now performs a serialized stop,
+  rebind, session refresh, and service rebind with automatic preference and
+  listener rollback; port-tagged lifecycle events cannot stale the new state.
+- Startup authentication now keeps its asynchronous keystore probe in the
+  retained view model, preventing an appearance-triggered activity relaunch
+  from leaving the app permanently stuck on the initializing dialog.
+- Empty component-rule resets no longer crash when they finish before the
+  progress dialog's deferred show callback runs.
+- Removing all component rules now snapshots every user before mutation,
+  reports bounded per-target progress, stays cancellable, preserves failed or
+  unattempted rules for one-tap retry, and records package/user outcomes in
+  Operation History instead of always claiming success on the wrong screen.
+- The packaged English manual now uses fork-owned identity, release, support,
+  contribution, and translation guidance consistently across its source and
+  generated HTML instead of routing users to stale upstream destinations.
+- Activity Interceptor URI generation now falls back to a safe base-intent copy
+  when foreign Parcelable extras cannot be unmarshalled, preserves readable
+  primitive extras, reports skipped keys/types, and surfaces malformed paste errors.
+- Published README and roadmap documentation no longer link to maintainer-local
+  archive files that are absent from Git; the archive paths are explicitly
+  ignored and protected by a documentation-link contract.
+- Production app, file, process, and UI helper failures now use structured
+  logging instead of writing stack traces directly to stderr; a source contract
+  prevents no-argument `printStackTrace()` calls from returning.
+- Local privileged-server authentication tokens now live in a device-local,
+  backup-excluded preference file, rotate away from legacy restored values,
+  stay out of snapshot bundles, and are redacted from app/server diagnostics.
 - Deep audit pass (2026-07-02):
   - Clear Data no longer crashes with an uncatchable `NoSuchMethodError` on
     API 21–27 — the `IActivityManager` path now falls back to
@@ -4621,7 +4672,7 @@ UI lifecycle / crashes
   pass-2 NF/EI backlog, v0.6.0 blockers, distribution tasks, platform
   verification, and accessibility audits.
 - Archived the previous long-form roadmap and both 2026-05-25 research feature
-  plans under [`docs/roadmap/archive/`](docs/roadmap/archive/) so completed
+  plans in the maintainer-local `docs/roadmap/archive/` directory so completed
   work lives in the changelog and open work lives in one file.
 - Refreshed `README.md` and `PROJECT_CONTEXT.md` to point at v0.5.0 and the
   consolidated roadmap/archive split.
@@ -4919,7 +4970,7 @@ Full per-slice notes follow.
   v0.1.0 -> v0.4.2 plus a note that `Unreleased` work lands as v0.5.0; the parser
   no longer references the upstream DTD URL at runtime.
 - README `Roadmap` block pointed at the then-active backlog
-  (`docs/roadmap/archive/RESEARCH_FEATURE_PLAN_2026-05-25.md` after the
+  (maintainer-local `docs/roadmap/archive/RESEARCH_FEATURE_PLAN_2026-05-25.md` after the
   2026-05-26 consolidation), marked v0.5.0 as in flight with the Iter-91 ->
   Iter-142 batch summary, and billed v0.6.0 as Rootless Power.
 - `CLAUDE.md` `Status` section now points at `PROJECT_CONTEXT.md` /
@@ -6235,7 +6286,7 @@ Maintenance release. Concentrates 19 closed Now/Eng-Debt rows from the iter-19/i
 - Sui has no `moe.shizuku.privileged.api` package install, so the Magisk-module marker is the only authoritative signal — the iter-20 `PackageManager` enumeration approach the row originally proposed is unnecessary once the marker is read directly. The "prefer Sui over Shizuku" routing decision is deferred to the still-pending Privilege Health-Check screen (T5); `info.suiPresent` is the wire for it. Reference: [S178]. Closes the iter-20 Now/T5 row.
 
 ### Docs — GrapheneOS A16 background-install fix patch reference (2026-05-08)
-- New [`docs/patch-references/2026-05-08-grapheneos-a16-background-install.md`](docs/patch-references/2026-05-08-grapheneos-a16-background-install.md) captures both fixes from GrapheneOS AppStore Release 36: (a) wrap user-confirmation `startActivity()` in an `isResumed` check + defer to `onPostResume()` when paused (Android 16 `IllegalStateException: Can not perform this action after onSaveInstanceState`), and (b) audit `getCallingPackage()` + `getReferrer()` and drop queued `PendingActions` when an external untrusted caller re-targets the activity.
+- A maintainer-local `docs/patch-references/2026-05-08-grapheneos-a16-background-install.md` note captured both fixes from GrapheneOS AppStore Release 36: (a) wrap user-confirmation `startActivity()` in an `isResumed` check + defer to `onPostResume()` when paused (Android 16 `IllegalStateException: Can not perform this action after onSaveInstanceState`), and (b) audit `getCallingPackage()` + `getReferrer()` and drop queued `PendingActions` when an external untrusted caller re-targets the activity.
 - Port deferred until an Android 16 test device is available; doc lists the exact NG site ([`PackageInstallerActivity.java`](app/src/main/java/io/github/muntashirakon/AppManager/apk/installer/PackageInstallerActivity.java)) and validation steps. Closes the iter-20 Now/T11 row in patch-reference form.
 
 ### Fixed — Debloater shortcut crash on pre-A13 / Unisoc devices (2026-05-08)

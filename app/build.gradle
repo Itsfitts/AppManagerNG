@@ -15,8 +15,8 @@ android {
         applicationId = 'io.github.sysadmindoc.AppManagerNG'
         minSdk = min_sdk
         targetSdk = target_sdk
-        versionCode = 12
-        versionName = "0.6.4"
+        versionCode = 13
+        versionName = "0.6.5"
         // AndroidX JUnit4 instrumentation runner so AndroidJUnit4-annotated tests
         // (e.g. AppsDbMigrationTest) are discovered. Default is the legacy
         // android.test.InstrumentationTestRunner which would silently skip them.
@@ -154,6 +154,18 @@ android {
         aidl = true
         buildConfig = true
         resValues = true
+    }
+}
+
+tasks.withType(Test).configureEach {
+    // SDK 36's instrumented framework is large enough to make Gradle's default
+    // 512 MiB test-worker heap spend most of a full-suite run in GC.
+    maxHeapSize = "1024m"
+    doFirst {
+        if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)) {
+            throw new GradleException("${path} runs Robolectric against Android SDK 36 and requires JDK 21 or newer. "
+                    + "Gradle is using ${System.getProperty('java.version')}; update JAVA_HOME or the IDE Gradle JDK.")
+        }
     }
 }
 

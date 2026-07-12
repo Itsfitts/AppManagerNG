@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.6.4-blue.svg" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.6.5-blue.svg" />
   <img alt="License" src="https://img.shields.io/badge/license-GPL--3.0--or--later-green.svg" />
   <img alt="Platform" src="https://img.shields.io/badge/platform-Android%205.0%2B-brightgreen.svg" />
   <img alt="Min SDK" src="https://img.shields.io/badge/minSdk-21-orange.svg" />
@@ -92,8 +92,8 @@ Reclaim storage without losing anything: archiving removes an app's APK and cach
 See [ROADMAP.md](ROADMAP.md) for planned work, [RESEARCH.md](RESEARCH.md) for
 the current research backing, and
 [`docs/roadmap/COMPLETED.md`](docs/roadmap/COMPLETED.md) for completed or stale
-items. Historical roadmap and research ledgers are archived under
-[`docs/roadmap/archive/`](docs/roadmap/archive/) and [`docs/archive/`](docs/archive/).
+items. Maintainer-local historical archives are intentionally excluded from
+published checkouts; shipped work remains traceable through this changelog and Git history.
 Version targets:
 
 - **v0.2.0** ✅ — applicationId rename to `io.github.sysadmindoc.AppManagerNG`, fresh keystore, local release publishing, NG CONTRIBUTING.md
