@@ -10,7 +10,7 @@ on:
         type: choice
         options:
           - main
-          - develop
+          - upstream
       build_type:
         description: 'Build type'
         required: true
@@ -45,6 +45,12 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+       - name: Clear Gradle cache
+         run: rm -rf ~/.gradle/verification-metadata.xml
+  
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
       - name: Build Debug APK
         if: inputs.build_type == 'debug'
         run: ./gradlew assembleDebug
@@ -73,3 +79,4 @@ jobs:
           echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "APK artifacts are available in the Actions artifacts section." >> $GITHUB_STEP_SUMMARY
+          
