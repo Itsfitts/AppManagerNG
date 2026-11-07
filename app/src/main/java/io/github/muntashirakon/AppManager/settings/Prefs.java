@@ -207,13 +207,11 @@ public final class Prefs {
 
         @StyleRes
         public static int getTransparentAppTheme() {
-            // V2 preview keeps the classic transparent variants; transparent surfaces are
-            // intentionally out of v0.4.x foundation scope (see design/plan/3-rollout.md).
             switch (AppPref.getInt(AppPref.PrefKey.PREF_APP_THEME_CUSTOM_INT)) {
                 case 1: // Full black theme
-                    return io.github.muntashirakon.ui.R.style.AppTheme_TransparentBackground_Black;
+                    return io.github.muntashirakon.AppManager.R.style.AppTheme_TransparentBackground_Black;
                 default: // Normal theme
-                    return io.github.muntashirakon.ui.R.style.AppTheme_TransparentBackground;
+                    return io.github.muntashirakon.AppManager.R.style.AppTheme_TransparentBackground;
             }
         }
 
@@ -950,6 +948,14 @@ public final class Prefs {
 
         public static void setTaskerPluginSigningSecret(@Nullable String secret) {
             AppPref.set(AppPref.PrefKey.PREF_TASKER_PLUGIN_SIGNING_SECRET_STR, secret == null ? "" : secret);
+        }
+
+        public static boolean isServerControlBroadcastsEnabled() {
+            return AppPref.getBoolean(AppPref.PrefKey.PREF_SERVER_CONTROL_BROADCASTS_BOOL);
+        }
+
+        public static void setServerControlBroadcastsEnabled(boolean enabled) {
+            AppPref.set(AppPref.PrefKey.PREF_SERVER_CONTROL_BROADCASTS_BOOL, enabled);
         }
     }
 

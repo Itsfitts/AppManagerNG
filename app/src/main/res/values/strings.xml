@@ -125,6 +125,13 @@
     <string name="main_list_installed_state">Installed</string>
     <string name="main_list_uninstalled_state">Not installed</string>
     <string name="main_list_app_content_description">%1$s, %2$s, package %3$s, %4$s, %5$s. Double tap for app details.</string>
+    <string name="main_list_uid_label">UID <xliff:g id="uid" example="10123">%1$s</xliff:g></string>
+    <string name="main_list_uid_a11y">UID <xliff:g id="uid" example="10123">%1$s</xliff:g>.</string>
+    <plurals name="main_list_app_id_multi_user_a11y">
+        <item quantity="one">App ID <xliff:g id="app_id" example="10123">%1$s</xliff:g>, installed for <xliff:g id="users" example="1">%2$d</xliff:g> user.</item>
+        <item quantity="other">App ID <xliff:g id="app_id" example="10123">%1$s</xliff:g>, installed for <xliff:g id="users" example="2">%2$d</xliff:g> users.</item>
+    </plurals>
+    <string name="main_list_shared_user_a11y">Shared user <xliff:g id="shared_user" example="android.uid.system">%1$s</xliff:g>.</string>
     <string name="package_state_enabled">enabled</string>
     <string name="package_state_disabled">disabled</string>
     <string name="package_state_not_installed">not installed</string>
@@ -381,6 +388,7 @@
     <string name="delete">Delete</string>
     <string name="deleted_successfully">Deleted</string>
     <string name="deletion_failed">Deletion failed</string>
+    <string name="code_editor_unavailable">Couldn\'t open the code editor: <xliff:g id="reason" example="no such font">%1$s</xliff:g></string>
     <string name="saved_successfully">Saved</string>
     <string name="saving_failed">Saving failed, try again.</string>
     <string name="editor_save_failed_unchanged">Couldn\'t save the file: <xliff:g id="reason" example="the saved file did not read back as written">%1$s</xliff:g>. The file wasn\'t changed.</string>
@@ -1366,6 +1374,8 @@
     <string name="force_stop_tile_app_set">Quick Settings force-stop tile will stop %1$s.</string>
     <string name="force_stop_tile_no_app">Choose an app before using this tile.</string>
     <string name="force_stop_tile_done">Force-stopped %1$s.</string>
+    <string name="quick_open_tile_feature_off">Turned off in settings</string>
+    <string name="quick_open_tile_failed">Could not open %1$s.</string>
     <string name="quick_assist_title">Quick assist</string>
     <string name="quick_assist_title_for_app">Quick assist: <xliff:g id="app_label" example="Slack">%1$s</xliff:g></string>
     <string name="quick_assist_target_message">Target package: <xliff:g id="package_name" example="com.example.app">%1$s</xliff:g></string>
@@ -2453,6 +2463,21 @@
     <string name="auth_manager_description">Trusted third-party apps can launch AppManagerNG intents only when they include this key in the <tt>auth</tt> extra.</string>
     <string name="auth_manager_key_label">Authorization key</string>
     <string name="auth_manager_title">Authorization manager</string>
+    <string name="pref_server_control_broadcasts">Server control broadcasts</string>
+    <string name="pref_server_control_broadcasts_msg">Lets an automation app start or stop the privileged server and pick the mode of operation by broadcast. Each call has to carry the key from Authorization manager, and each one is recorded in Operation history.</string>
+    <string name="pref_server_control_reference">Server control reference</string>
+    <string name="pref_server_control_reference_msg">The actions, extras and result codes an automation app needs.</string>
+    <string name="server_control_reference">Send to package %1$s. Android drops broadcasts that don\'t name the package or component.\n\nActions\n%1$s.action.SERVER_START starts the server in the saved mode.\n%1$s.action.SERVER_STOP stops the server and keeps the saved mode, so opening the app starts it again.\n%1$s.action.SERVER_SET_MODE switches to the mode in the mode extra, and saves it once the switch works.\n\nExtras (all strings)\nauth: the key from Authorization manager. Required.\nmode: auto, root, shizuku, adb_tcp, adb_wifi or no-root. Required for SERVER_SET_MODE, refused on the other two.\nrequest_id: optional, up to 64 letters, digits, dots, underscores, colons or hyphens, sent back to you.\nresult_package: optional, the package that gets the result broadcast.\n\nResult code, read from an ordered broadcast\n-1 done\n0 nothing received the broadcast\n1 still running, the result broadcast has the answer\n2 this setting is off\n3 wrong or missing key\n4 unknown action, mode or extra\n5 another mode switch is running\n6 finished, but the saved mode runs no server\n100 and up: 100 plus the mode of operation status\n\nResult broadcast\n%1$s.action.SERVER_CONTROL_RESULT, sent to result_package once the command ends, with the extras result_code, command, mode (the saved mode), uid (the uid operations run as), ops_status and request_id. Callers that can\'t read an ordered result, such as Tasker\'s Send Intent, use this.\n\nExample\nadb shell am broadcast -a %1$s.action.SERVER_SET_MODE -p %1$s --es auth &lt;key&gt; --es mode adb_tcp</string>
+    <string name="server_control_history_label">Server control broadcast</string>
+    <string name="server_control_started">Automation started the server</string>
+    <string name="server_control_stopped">Automation stopped the server</string>
+    <string name="server_control_mode_set">Automation set the mode to %1$s</string>
+    <string name="server_control_no_server">Automation asked for the server, but the saved mode doesn\'t run one</string>
+    <string name="server_control_failed">An automation server command failed</string>
+    <string name="server_control_needs_you">An automation server command needs you. Open Mode of operation to finish it.</string>
+    <string name="server_control_bad_key">Refused a server command with a wrong key</string>
+    <string name="server_control_bad_request">Refused a server command it couldn\'t read</string>
+    <string name="server_control_busy">Refused a server command because a mode switch is running</string>
     <string name="regenerate_auth_key">Regenerate authorization key</string>
     <string name="regenerate_auth_key_warning">Regenerating this key immediately invalidates existing third-party integrations. Reconfigure trusted apps with the new key to keep them working.</string>
     <string name="shortcut_icon">Shortcut icon</string>
@@ -3163,6 +3188,19 @@
     <string name="tracker_window_close">Close UI tracker</string>
     <string name="tracker_window_app_details_unavailable">Cannot open details for the tracked app.</string>
     <string name="tracker_window_disabled_after_errors">UI tracker was disabled after repeated overlay failures. Reopen it after checking overlay and accessibility permissions.</string>
+    <string name="top_app_overlay_title">Top app bubble</string>
+    <string name="top_app_overlay_waiting">Waiting for an app</string>
+    <string name="top_app_overlay_stop">Stop</string>
+    <string name="top_app_overlay_started">Top app bubble is on.</string>
+    <string name="top_app_overlay_stopped">Top app bubble is off.</string>
+    <string name="top_app_overlay_failed">Could not show the top app bubble.</string>
+    <string name="top_app_overlay_needs_overlay">Allow display over other apps so the bubble can show, then turn it on again.</string>
+    <string name="top_app_overlay_needs_usage_access">Allow usage access so the bubble can see the top app, then turn it on again. The accessibility service works too, and also catches ads drawn as overlays.</string>
+    <string name="top_app_overlay_needs_accessibility">Turn on the accessibility service so the bubble can see the top app, then turn it on again.</string>
+    <string name="top_app_overlay_no_source">Can\'t see the top app. Turn on the accessibility service or usage access.</string>
+    <string name="top_app_overlay_notification_text">Showing %1$s. Tap to open its App Details.</string>
+    <string name="top_app_overlay_recent_row">%1$s (%2$s)</string>
+    <string name="top_app_overlay_bubble_description">Top app %1$s. Tap for App Details, long press for recent apps, drag to move.</string>
     <string name="open_in_app_store">Open in app store</string>
     <string name="title_terminal_emulator">Terminal (Preview)</string>
     <string name="terminal_preview_notice">Preview: no tab completion, command history, or init scripts.</string>

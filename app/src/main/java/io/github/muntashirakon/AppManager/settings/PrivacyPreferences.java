@@ -52,6 +52,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.db.AppsDb;
@@ -60,6 +61,7 @@ import io.github.muntashirakon.AppManager.permission.monitor.AppChangeFeedEntry;
 import io.github.muntashirakon.AppManager.permission.monitor.AppChangeFeedStore;
 import io.github.muntashirakon.AppManager.permission.monitor.AppChangeFeedTransfer;
 import io.github.muntashirakon.AppManager.permission.monitor.AppUpdateChangeReportFormatter;
+import io.github.muntashirakon.AppManager.utils.ClipboardUtils;
 import io.github.muntashirakon.AppManager.utils.MotionUtils;
 import io.github.muntashirakon.AppManager.crypto.auth.ActionAuthGate;
 import io.github.muntashirakon.AppManager.crypto.auth.AuthManagerActivity;
@@ -248,6 +250,22 @@ public class PrivacyPreferences extends PreferenceFragment {
             startActivity(new Intent(requireContext(), AuthManagerActivity.class));
             return true;
         });
+        // Server control broadcasts. Off until the user turns them on, SettingsDataStore saves the
+        // switch (the data store is set after the switch reads its first value, so set that here).
+        SwitchPreferenceCompat serverControl = requirePreference("server_control_broadcasts");
+        serverControl.setChecked(Prefs.AppActions.isServerControlBroadcastsEnabled());
+        requirePreference("server_control_reference").setOnPreferenceClickListener(preference -> {
+            Context context = requireContext();
+            String reference = getString(R.string.server_control_reference, BuildConfig.APPLICATION_ID);
+            new MaterialAlertDialogBuilder(context)
+                    .setTitle(R.string.pref_server_control_reference)
+                    .setMessage(reference)
+                    .setPositiveButton(R.string.ok, null)
+                    .setNeutralButton(R.string.copy, (dialog, which) -> ClipboardUtils.copyToClipboard(
+                            context, getString(R.string.pref_server_control_reference), reference))
+                    .show();
+            return true;
+        });
         // Permission change monitor (T9). Toggling ON primes the snapshot store so
         // the very next package update has a known-good baseline to diff against.
         SwitchPreferenceCompat permissionMonitor = requirePreference("enable_permission_change_monitor");
@@ -348,7 +366,8 @@ public class PrivacyPreferences extends PreferenceFragment {
             List<AppChangeFeedEntry> finalEntries = Collections.unmodifiableList(entries);
             ThreadUtils.postOnMainThread(() -> {
                 if (!isAdded()) return;
-                showAppChangeFeedDialog(appContext, finalEntries);
+                // Material widgets refuse the application context: it has no Material theme.
+                showAppChangeFeedDialog(requireContext(), finalEntries);
             });
         });
     }

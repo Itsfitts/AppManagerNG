@@ -1702,6 +1702,90 @@
                 android:value="false" />
         </service>
         <service
+            android:name=".shortcut.QuickOpenTileService$RunningApps"
+            android:exported="true"
+            android:icon="@drawable/ic_pulse"
+            android:label="@string/running_apps"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            tools:targetApi="24">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
+                android:value="false" />
+        </service>
+        <service
+            android:name=".shortcut.QuickOpenTileService$AppUsage"
+            android:exported="true"
+            android:icon="@drawable/ic_data_usage"
+            android:label="@string/app_usage"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            tools:targetApi="24">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
+                android:value="false" />
+        </service>
+        <service
+            android:name=".shortcut.QuickOpenTileService$Profiles"
+            android:exported="true"
+            android:icon="@drawable/ic_file_document_multiple"
+            android:label="@string/profiles"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            tools:targetApi="24">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
+                android:value="false" />
+        </service>
+        <service
+            android:name=".shortcut.QuickOpenTileService$LogViewer"
+            android:exported="true"
+            android:icon="@drawable/ic_view_list"
+            android:label="@string/log_viewer"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            tools:targetApi="24">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
+                android:value="false" />
+        </service>
+        <service
+            android:name=".accessibility.topapp.TopAppOverlayTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_eye"
+            android:label="@string/top_app_overlay_title"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            tools:targetApi="24">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
+                android:value="true" />
+        </service>
+        <service
+            android:name=".accessibility.topapp.TopAppOverlayService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse"
+            tools:targetApi="30">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Keep a user-started floating bubble on screen that names the current top app so the user can find which app shows ads" />
+        </service>
+        <service
             android:name=".logcat.LogcatRecordingService"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
@@ -1768,6 +1852,17 @@
                 <action android:name="${applicationId}.action.RUN_PROFILE" />
                 <action android:name="${applicationId}.action.INSTALL_FROM_URI" />
                 <action android:name="${applicationId}.action.SCAN_TRACKERS" />
+            </intent-filter>
+        </receiver>
+        <!-- Exported with no permission on purpose: the authorization key in the auth extra is the
+             gate, and a setting that is off by default turns the whole receiver off. -->
+        <receiver
+            android:name=".automation.ServerControlReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="${applicationId}.action.SERVER_START" />
+                <action android:name="${applicationId}.action.SERVER_STOP" />
+                <action android:name="${applicationId}.action.SERVER_SET_MODE" />
             </intent-filter>
         </receiver>
         <receiver
