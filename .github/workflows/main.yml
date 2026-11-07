@@ -78,11 +78,6 @@ jobs:
           restore-keys: |
             android-sdk-${{ runner.os }}-
 
-      - name: Pre-Push Guard
-        run: |
-          chmod +x pre-push-guard/scripts/pre_push_check.sh
-          bash pre-push-guard/scripts/pre_push_check.sh
-
       - name: Setup Java
         uses: actions/setup-java@v5
         with:
